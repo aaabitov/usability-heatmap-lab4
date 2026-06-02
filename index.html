@@ -1,418 +1,310 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ЛР4 — тепловая карта</title>
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=107096805', 'ym');
+    ym(107096805, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/107096805" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Лабораторная работа №4 — Авторизация</title>
 
   <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
 
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #eef2f7;
-      color: #172033;
-    }
-
-    .header {
-      padding: 32px 48px;
-      background: #172033;
-      color: white;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 340px;
-      gap: 24px;
-      padding: 24px;
-    }
-
-    .site-card {
-      position: relative;
-      overflow: hidden;
-      min-height: 720px;
-      background: white;
-      border-radius: 22px;
-      box-shadow: 0 16px 40px #0002;
-    }
-
-    #heatmapCanvas {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      opacity: 0.75;
-    }
-
-    .nav {
-      position: relative;
-      z-index: 2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
-      gap: 18px;
-      padding: 22px 28px;
-      border-bottom: 1px solid #e6edf5;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #333;
     }
 
-    .nav a {
-      color: #172033;
-      text-decoration: none;
-      font-weight: 700;
+    .container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
     }
 
-    .hero {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: 1fr 170px;
-      gap: 32px;
-      padding: 54px 42px;
-      background: linear-gradient(135deg, #f8fbff, #e7f1ff);
-    }
-
-    .badge {
+    .lab-label {
       display: inline-block;
-      padding: 8px 12px;
+      margin-bottom: 12px;
+      padding: 6px 10px;
       border-radius: 999px;
-      background: #dcecff;
-      color: #175ca8;
+      background: #eef2ff;
+      color: #5a67d8;
+      font-size: 13px;
       font-weight: 700;
     }
 
-    .hero h2 {
-      max-width: 620px;
-      font-size: 40px;
-      line-height: 1.1;
+    h1 {
+      margin-bottom: 10px;
+      font-size: 28px;
+      color: #4a4a4a;
     }
 
-    .stats {
-      align-self: center;
-      display: grid;
-      place-items: center;
-      min-height: 150px;
-      border-radius: 22px;
-      background: white;
-      box-shadow: 0 10px 24px #0002;
+    .subtitle {
+      margin-bottom: 30px;
+      color: #777;
+      font-size: 15px;
     }
 
-    .stats strong {
-      font-size: 54px;
-      color: #1769e0;
+    .form-group {
+      margin-bottom: 24px;
+      text-align: left;
     }
 
-    .features {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      padding: 32px;
-    }
-
-    .features article,
-    .form-block,
-    .panel {
-      border-radius: 18px;
-      background: white;
-      box-shadow: 0 10px 24px #0001;
-    }
-
-    .features article {
-      padding: 24px;
-      border: 1px solid #e6edf5;
-    }
-
-    .form-block {
-      position: relative;
-      z-index: 2;
-      margin: 0 32px 32px;
-      padding: 28px;
-      border: 1px solid #e6edf5;
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
     }
 
     input {
-      display: block;
       width: 100%;
-      margin-bottom: 14px;
-      padding: 13px 14px;
-      border: 1px solid #cfd9e6;
-      border-radius: 12px;
+      padding: 14px 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
       font-size: 16px;
+      transition: all 0.25s ease;
     }
 
-    button {
-      border: 0;
-      border-radius: 12px;
-      padding: 13px 18px;
-      background: #1769e0;
-      color: white;
-      font-weight: 700;
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    }
+
+    input.error-field {
+      border-color: #e53e3e;
+      box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
       cursor: pointer;
-      margin: 4px;
+      font-size: 20px;
+      color: #888;
+      user-select: none;
     }
 
-    button.secondary {
-      background: #e6edf5;
-      color: #172033;
-    }
-
-    .panel {
-      align-self: start;
-      padding: 24px;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 20px 0;
-    }
-
-    .metrics div {
-      padding: 18px;
-      border-radius: 16px;
-      background: #f3f7fc;
-    }
-
-    .metrics span {
-      display: block;
-      font-size: 34px;
-      font-weight: 800;
-      color: #1769e0;
-    }
-
-    .panel button {
-      display: block;
+    button[type="submit"] {
       width: 100%;
-      margin: 0 0 10px;
+      padding: 14px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
     }
 
-    button.danger {
-      background: #d93636;
+    button[type="submit"]:hover {
+      background: #5a6ee0;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
     }
 
-    @media (max-width: 960px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
+    .extra-links {
+      margin-top: 25px;
+      font-size: 14px;
+    }
 
-      .features,
-      .hero {
-        grid-template-columns: 1fr;
-      }
+    .extra-links a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: #fff5f5;
+      color: #c53030;
+      border: 1px solid #feb2b2;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .success-message {
+      display: none;
+      margin-top: 25px;
+      padding: 15px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+
+    .success-message.visible {
+      display: block;
+    }
+
+    .field-error {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #c53030;
     }
   </style>
 </head>
-
 <body>
-  <header class="header">
-    <p>Лабораторная работа №4</p>
-    <h1>Юзабилити-тестирование интернет-ресурса</h1>
-    <p>Нажимайте на элементы страницы. Программа построит тепловую карту кликов.</p>
-  </header>
+  <div class="container">
+    <span class="lab-label">Юзабилити-тестирование</span>
+    <h1>Добро пожаловать</h1>
+    <p class="subtitle">Войдите в свой аккаунт</p>
 
-  <main class="layout">
-    <section class="site-card" id="testArea">
-      <canvas id="heatmapCanvas"></canvas>
-
-      <nav class="nav">
-        <a href="#">Главная</a>
-        <a href="#">Возможности</a>
-        <a href="#">Тарифы</a>
-        <a href="#">Контакты</a>
-      </nav>
-
-      <section class="hero">
-        <div>
-          <p class="badge">Сервис управления соревнованиями</p>
-          <h2>Создавайте турниры и отслеживайте результаты</h2>
-          <p>Макет страницы используется для учебного юзабилити-тестирования.</p>
-          <button>Создать турнир</button>
-          <button class="secondary">Посмотреть пример</button>
-        </div>
-
-        <div class="stats">
-          <strong>4.8</strong>
-          <span>оценка удобства</span>
-        </div>
-      </section>
-
-      <section class="features">
-        <article>
-          <h3>Регистрация участников</h3>
-          <p>Добавление игроков и рейтинга.</p>
-        </article>
-
-        <article>
-          <h3>Автоматические пары</h3>
-          <p>Формирование пар турнира.</p>
-        </article>
-
-        <article>
-          <h3>Итоговая таблица</h3>
-          <p>Подсчёт очков и результатов.</p>
-        </article>
-      </section>
-
-      <section class="form-block">
-        <h3>Заявка на участие</h3>
-        <input type="text" placeholder="Ваше имя">
-        <input type="email" placeholder="Email">
-        <button>Отправить заявку</button>
-      </section>
-    </section>
-
-    <aside class="panel">
-      <h2>Панель тестирования</h2>
-
-      <div class="metrics">
-        <div>
-          <span id="clickCount">0</span>
-          <small>кликов</small>
-        </div>
-
-        <div>
-          <span id="hotZones">0</span>
-          <small>активных зон</small>
-        </div>
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="username">Логин или email</label>
+        <input type="text" id="username" placeholder="ivan123 или ivan@example.com" autocomplete="username">
+        <span class="field-error" id="usernameError"></span>
       </div>
 
-      <p>Последний клик: <span id="lastClick">нет данных</span></p>
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+          <span class="toggle-password" id="togglePassword" role="button" aria-label="Показать/скрыть пароль">👁</span>
+        </div>
+        <span class="field-error" id="passwordError"></span>
+      </div>
 
-      <button id="toggleHeatmap">Скрыть / показать карту</button>
-      <button id="demoData">Загрузить демо-данные</button>
-      <button id="exportJson">Показать JSON</button>
-      <button id="exportCsv">Показать CSV</button>
-      <button id="clearData" class="danger">Очистить данные</button>
+      <button type="submit" id="loginBtn">Войти</button>
+    </form>
 
-      <h3>Задание</h3>
-      <ol>
-        <li>Найти кнопку создания турнира.</li>
-        <li>Посмотреть возможности сайта.</li>
-        <li>Заполнить форму заявки.</li>
-      </ol>
-    </aside>
-  </main>
+    <div class="error-message" id="errorMsg"></div>
+
+    <div class="extra-links">
+      <a href="#">Забыли пароль?</a> • <a href="#">Создать аккаунт</a>
+    </div>
+
+    <div class="success-message" id="successMsg">
+      Успешный вход! Добро пожаловать, <span id="userName"></span> 🎉
+    </div>
+  </div>
 
   <script>
-    const area = document.getElementById('testArea');
-    const canvas = document.getElementById('heatmapCanvas');
-    const ctx = canvas.getContext('2d');
-    const count = document.getElementById('clickCount');
-    const zones = document.getElementById('hotZones');
-    const last = document.getElementById('lastClick');
-    const key = 'lab4-points';
+    const USERS = {
+      'testuser': 'password123',
+      'admin': 'admin123',
+      'ivan@example.com': 'password123'
+    };
 
-    let points = JSON.parse(localStorage.getItem(key) || '[]');
-    let visible = true;
+    const form = document.getElementById('loginForm');
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const usernameInput = document.getElementById('username');
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
+    const userNameSpan = document.getElementById('userName');
+    const usernameError = document.getElementById('usernameError');
+    const passwordError = document.getElementById('passwordError');
 
-    function save() {
-      localStorage.setItem(key, JSON.stringify(points));
+    togglePassword.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePassword.textContent = isPassword ? '🙈' : '👁';
+    });
+
+    usernameInput.addEventListener('input', clearErrors);
+    passwordInput.addEventListener('input', clearErrors);
+
+    function clearErrors() {
+      usernameInput.classList.remove('error-field');
+      passwordInput.classList.remove('error-field');
+      usernameError.textContent = '';
+      passwordError.textContent = '';
+      errorMsg.classList.remove('visible');
+      errorMsg.textContent = '';
     }
 
-    function resize() {
-      const rect = area.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      draw();
-    }
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      let valid = true;
 
-      if (!visible) {
+      if (!username) {
+        usernameInput.classList.add('error-field');
+        usernameError.textContent = 'Поле «Логин или email» обязательно для заполнения.';
+        valid = false;
+      }
+
+      if (!password) {
+        passwordInput.classList.add('error-field');
+        passwordError.textContent = 'Поле «Пароль» обязательно для заполнения.';
+        valid = false;
+      }
+
+      if (!valid) {
         return;
       }
 
-      for (const point of points) {
-        const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, 55);
-        gradient.addColorStop(0, 'rgba(255, 0, 0, 0.55)');
-        gradient.addColorStop(0.5, 'rgba(255, 180, 0, 0.35)');
-        gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
+      const expectedPassword = USERS[username];
 
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 55, 0, Math.PI * 2);
-        ctx.fill();
+      if (!expectedPassword) {
+        errorMsg.textContent = 'Пользователь с таким логином не найден.';
+        errorMsg.classList.add('visible');
+        usernameInput.classList.add('error-field');
+        return;
       }
-    }
 
-    function updateInfo() {
-      count.textContent = points.length;
+      if (expectedPassword !== password) {
+        errorMsg.textContent = 'Неверный пароль. Пожалуйста, проверьте введённые данные.';
+        errorMsg.classList.add('visible');
+        passwordInput.classList.add('error-field');
+        return;
+      }
 
-      const activeZones = new Set(
-        points.map(point => Math.floor(point.x / 120) + '-' + Math.floor(point.y / 120))
-      );
-
-      zones.textContent = activeZones.size;
-
-      const point = points[points.length - 1];
-      last.textContent = point
-        ? 'x: ' + point.x + ', y: ' + point.y + ', элемент: ' + point.tag
-        : 'нет данных';
-    }
-
-    area.addEventListener('click', event => {
-      const rect = area.getBoundingClientRect();
-
-      points.push({
-        x: Math.round(event.clientX - rect.left),
-        y: Math.round(event.clientY - rect.top),
-        tag: event.target.tagName.toLowerCase(),
-        time: new Date().toLocaleString('ru-RU')
-      });
-
-      save();
-      updateInfo();
-      draw();
+      form.style.display = 'none';
+      errorMsg.classList.remove('visible');
+      successMsg.classList.add('visible');
+      userNameSpan.textContent = username;
     });
-
-    document.getElementById('toggleHeatmap').onclick = () => {
-      visible = !visible;
-      draw();
-    };
-
-    document.getElementById('demoData').onclick = () => {
-      points = points.concat([
-        { x: 100, y: 330, tag: 'button', time: 'demo' },
-        { x: 125, y: 335, tag: 'button', time: 'demo' },
-        { x: 300, y: 335, tag: 'button', time: 'demo' },
-        { x: 160, y: 90, tag: 'a', time: 'demo' },
-        { x: 420, y: 580, tag: 'article', time: 'demo' },
-        { x: 180, y: 690, tag: 'input', time: 'demo' }
-      ]);
-
-      save();
-      updateInfo();
-      draw();
-    };
-
-    document.getElementById('clearData').onclick = () => {
-      points = [];
-      save();
-      updateInfo();
-      draw();
-    };
-
-    document.getElementById('exportJson').onclick = () => {
-      alert(JSON.stringify(points, null, 2));
-    };
-
-    document.getElementById('exportCsv').onclick = () => {
-      const rows = ['x,y,tag,time'].concat(
-        points.map(point => point.x + ',' + point.y + ',' + point.tag + ',' + point.time)
-      );
-
-      alert(rows.join('\n'));
-    };
-
-    window.addEventListener('resize', resize);
-    resize();
-    updateInfo();
   </script>
 </body>
 </html>
