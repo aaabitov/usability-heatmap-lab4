@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <!-- Yandex.Metrika counter -->
-  <script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=107096805', 'ym');
-    ym(107096805, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-  </script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/107096805" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-  <!-- /Yandex.Metrika counter -->
+  <!--
+    Здесь должен быть личный счётчик Яндекс.Метрики.
+    Чужой счётчик удалён.
+    После создания своего счётчика в Яндекс.Метрике нужно вставить сюда код,
+    который выдаст сервис, и включить параметры webvisor и clickmap.
+  -->
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Лабораторная работа №4 — Авторизация</title>
+  <title>Лабораторная работа №4 — Юзабилити-тестирование</title>
 
   <style>
     * {
@@ -28,7 +22,7 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #5b7cfa 0%, #6f42c1 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -39,17 +33,17 @@
     .container {
       background: white;
       padding: 40px 30px;
-      border-radius: 16px;
+      border-radius: 18px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
       width: 100%;
-      max-width: 420px;
+      max-width: 460px;
       text-align: center;
     }
 
     .lab-label {
       display: inline-block;
       margin-bottom: 12px;
-      padding: 6px 10px;
+      padding: 6px 12px;
       border-radius: 999px;
       background: #eef2ff;
       color: #5a67d8;
@@ -60,12 +54,12 @@
     h1 {
       margin-bottom: 10px;
       font-size: 28px;
-      color: #4a4a4a;
+      color: #3f3f46;
     }
 
     .subtitle {
       margin-bottom: 30px;
-      color: #777;
+      color: #71717a;
       font-size: 15px;
     }
 
@@ -78,13 +72,13 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
-      color: #555;
+      color: #52525b;
     }
 
     input {
       width: 100%;
       padding: 14px 16px;
-      border: 1px solid #ddd;
+      border: 1px solid #d4d4d8;
       border-radius: 10px;
       font-size: 16px;
       transition: all 0.25s ease;
@@ -92,8 +86,8 @@
 
     input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+      border-color: #5b7cfa;
+      box-shadow: 0 0 0 4px rgba(91, 124, 250, 0.15);
     }
 
     input.error-field {
@@ -119,7 +113,7 @@
     button[type="submit"] {
       width: 100%;
       padding: 14px;
-      background: #667eea;
+      background: #5b7cfa;
       color: white;
       border: none;
       border-radius: 10px;
@@ -131,9 +125,9 @@
     }
 
     button[type="submit"]:hover {
-      background: #5a6ee0;
+      background: #4c6ef5;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+      box-shadow: 0 8px 20px rgba(91, 124, 250, 0.35);
     }
 
     .extra-links {
@@ -142,7 +136,7 @@
     }
 
     .extra-links a {
-      color: #667eea;
+      color: #5b7cfa;
       text-decoration: none;
       font-weight: 500;
     }
@@ -193,21 +187,21 @@
 <body>
   <div class="container">
     <span class="lab-label">Юзабилити-тестирование</span>
-    <h1>Добро пожаловать</h1>
-    <p class="subtitle">Войдите в свой аккаунт</p>
+    <h1>Вход в учебный сервис</h1>
+    <p class="subtitle">Тестовая форма для анализа удобства интерфейса</p>
 
     <form id="loginForm" novalidate>
       <div class="form-group">
         <label for="username">Логин или email</label>
-        <input type="text" id="username" placeholder="ivan123 или ivan@example.com" autocomplete="username">
+        <input type="text" id="username" placeholder="testuser или ivan@example.com" autocomplete="username">
         <span class="field-error" id="usernameError"></span>
       </div>
 
       <div class="form-group">
         <label for="password">Пароль</label>
         <div class="password-wrapper">
-          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-          <span class="toggle-password" id="togglePassword" role="button" aria-label="Показать/скрыть пароль">👁</span>
+          <input type="password" id="password" placeholder="Введите пароль" autocomplete="current-password">
+          <span class="toggle-password" id="togglePassword" role="button" aria-label="Показать или скрыть пароль">👁</span>
         </div>
         <span class="field-error" id="passwordError"></span>
       </div>
